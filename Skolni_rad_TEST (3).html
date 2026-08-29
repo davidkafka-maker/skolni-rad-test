@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Školní řád – TEST</title>
+<style>
+:root{
+  --bg:#140807;--panel:#2b130e;--panel2:#421d14;--gold:#ffd36a;--gold2:#ffb02e;--text:#fff7df;--muted:#e8cfaa;
+  --ok:#78f0a0;--bad:#ff5252;--train:#70e0ff;--challenge:#b9ff83;--test:#ff9a9a;--mini:#d4a3ff;
+}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#542014 0,#160806 45%,#050101 100%);color:var(--text);touch-action:manipulation;overscroll-behavior:none}
+body.mode-training{background:radial-gradient(circle at top,#10364a 0,#160806 52%,#030101 100%)}
+body.mode-mini{background:radial-gradient(circle at top,#35205b 0,#160806 52%,#030101 100%)}
+body.mode-challenge{background:radial-gradient(circle at top,#233f16 0,#160806 52%,#030101 100%)}
+body.mode-test{background:radial-gradient(circle at top,#5a1717 0,#160806 52%,#030101 100%)}
+.wrap{max-width:980px;margin:0 auto;padding:14px;min-height:100%;display:flex;flex-direction:column;gap:12px}
+.card{background:linear-gradient(180deg,rgba(61,27,18,.96),rgba(28,10,7,.96));border:1px solid rgba(255,211,106,.36);border-radius:22px;box-shadow:0 14px 36px rgba(0,0,0,.45);padding:16px}
+.card.training{border-color:rgba(112,224,255,.8);box-shadow:0 0 0 2px rgba(112,224,255,.14),0 14px 36px rgba(0,0,0,.45)}
+.card.mini{border-color:rgba(212,163,255,.86);box-shadow:0 0 0 2px rgba(212,163,255,.16),0 14px 36px rgba(0,0,0,.45)}
+.card.challenge{border-color:rgba(185,255,131,.86);box-shadow:0 0 0 2px rgba(185,255,131,.16),0 14px 36px rgba(0,0,0,.45)}
+.card.test{border-color:rgba(255,154,154,.9);box-shadow:0 0 0 2px rgba(255,154,154,.16),0 14px 36px rgba(0,0,0,.45)}
+.title{text-align:center;font-size:clamp(30px,6vw,62px);font-weight:1000;color:var(--gold);letter-spacing:.03em;text-shadow:0 2px 0 #5d260a,0 0 24px rgba(255,176,46,.36);margin:10px 0}
+.subtitle{text-align:center;color:var(--muted);font-size:clamp(15px,2.4vw,20px);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.sectionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.trainCard{display:grid;grid-template-columns:1.2fr .8fr;gap:8px;align-items:stretch;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:10px}
+.btn{appearance:none;border:0;border-radius:16px;padding:14px 16px;background:linear-gradient(180deg,#ffd36a,#b96617);color:#2b1206;font-weight:1000;font-size:17px;cursor:pointer;box-shadow:0 8px 0 #612507,0 10px 20px rgba(0,0,0,.35);user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn:active{transform:translateY(4px);box-shadow:0 4px 0 #612507}.btn.secondary{background:linear-gradient(180deg,#f0d6a6,#9a6b2f);box-shadow:0 8px 0 #4c3215}.btn.trainingBtn{background:linear-gradient(180deg,#8cecff,#15738a);box-shadow:0 8px 0 #073646;color:#06212a}.btn.miniBtn{background:linear-gradient(180deg,#e2bbff,#7c38bd);box-shadow:0 8px 0 #37165d;color:#1c082e}.btn.challengeBtn{background:linear-gradient(180deg,#d0ff9e,#4d9a26);box-shadow:0 8px 0 #1d4a10;color:#082000}.btn.testBtn{background:linear-gradient(180deg,#ffb1a9,#c82e2e);box-shadow:0 8px 0 #661111;color:#fff}.btn.ghost{background:rgba(255,211,106,.12);color:var(--gold);border:1px solid rgba(255,211,106,.35);box-shadow:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}.topbar{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;font-weight:1000;color:var(--gold);font-size:clamp(14px,2.5vw,20px)}.topbar>div:nth-child(2){font-size:clamp(20px,4.8vw,34px);color:#fff}.badge{display:inline-block;border-radius:999px;padding:5px 12px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18)}
+.modeLine{text-align:center;color:var(--muted);font-weight:900}.promptType{text-align:center;font-weight:1000;font-size:clamp(16px,3vw,25px);margin:6px 0;color:var(--train)}.challenge .promptType{color:var(--challenge)}.test .promptType{color:var(--test)}.mini .promptType{color:var(--mini)}
+.clueBox{border:2px solid rgba(255,211,106,.55);border-radius:18px;padding:12px;background:rgba(0,0,0,.25);font-size:clamp(17px,3.8vw,29px);font-weight:1000;text-align:center;line-height:1.22}.clues{display:flex;flex-direction:column;gap:8px}.clue{padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.07)}
+.answerRow{display:flex;gap:10px;margin-top:12px}.input{flex:1;border:2px solid rgba(255,211,106,.45);border-radius:16px;padding:15px;font-size:22px;background:#fff8e8;color:#1a0804;font-weight:900;min-width:0}.feedback{text-align:center;font-size:clamp(18px,3.9vw,30px);font-weight:1000;min-height:46px;margin:6px}.ok{color:var(--ok)}.bad{color:var(--bad);text-shadow:0 0 16px rgba(255,0,0,.55)}.small{font-size:14px;color:var(--muted)}
+.correctAnswer{
+  display:inline-block;
+  margin-top:6px;
+  padding:8px 12px;
+  border-radius:14px;
+  background:rgba(255,211,106,.16);
+  border:1px solid rgba(255,211,106,.45);
+  color:#fff7df;
+  font-size:clamp(22px,5vw,40px);
+  font-weight:1000;
+  line-height:1.15;
+}
+.nameBox{display:flex;flex-direction:column;gap:10px;max-width:520px;margin:0 auto}.result{font-size:22px;line-height:1.5;text-align:center}.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}.piece{position:absolute;width:10px;height:16px;background:var(--gold);animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+.cheat{border-color:#ff2f2f;background:linear-gradient(180deg,rgba(92,8,8,.98),rgba(23,0,0,.98))}.cheat .title{color:#ffdddd;text-shadow:0 0 20px #ff0000}
+@media(max-width:700px){.wrap{padding:8px;gap:8px}.card{padding:12px;border-radius:16px}.grid,.sectionList{grid-template-columns:1fr}.trainCard{grid-template-columns:1fr}.answerRow{flex-direction:column}.btn{font-size:16px;padding:13px}.input{font-size:20px}.topbar{grid-template-columns:1fr;text-align:center}.topbar>div:nth-child(2){order:-1}.row .btn{flex:1 1 140px}.clueBox{padding:9px;font-size:clamp(16px,4.2vw,24px)}.feedback{font-size:clamp(17px,4vw,26px)}.correctAnswer{font-size:clamp(23px,6vw,34px)}.title{margin:2px 0 8px}.subtitle{margin-bottom:8px}}
+
+.mistakeMode .topbar,
+.mistakeMode .modeLine{
+  display:none !important;
+}
+.mistakeMode .input{
+  display:none !important;
+}
+.mistakeMode .answerRow{
+  justify-content:center;
+  margin-top:10px;
+}
+.mistakeMode .clueBox{
+  font-size:clamp(15px,3.1vw,23px);
+  padding:9px;
+  opacity:.82;
+}
+.nextAfterMistake{
+  margin-top:12px;
+  width:min(520px,100%);
+  font-size:clamp(20px,5vw,32px);
+  padding:16px 18px;
+}
+.correctAnswer{
+  display:inline-block;
+  margin-top:8px;
+  padding:10px 14px;
+  border-radius:16px;
+  background:rgba(255,211,106,.18);
+  border:1px solid rgba(255,211,106,.52);
+  color:#fff7df;
+  font-size:clamp(24px,6vw,44px);
+  font-weight:1000;
+  line-height:1.12;
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+@media(max-width:700px){
+  .mistakeMode .card{padding:10px}
+  .mistakeMode .clueBox{font-size:clamp(14px,3.8vw,21px);padding:8px}
+  .correctAnswer{font-size:clamp(25px,7vw,38px);padding:9px 11px}
+  .nextAfterMistake{font-size:clamp(19px,5.5vw,30px);padding:14px 16px}
+}
+
+
+/* Mobilně úsporný režim po chybě: zůstává původní tlačítko POTVRDIT. */
+.mistakeMode .topbar,
+.mistakeMode .modeLine{
+  display:none !important;
+}
+.mistakeMode .input{
+  display:none !important;
+}
+.mistakeMode .answerRow{
+  justify-content:center;
+  margin-top:10px;
+}
+.mistakeMode #submitBtn{
+  width:min(520px,100%);
+  font-size:clamp(20px,5vw,32px);
+  padding:16px 18px;
+}
+
+
+/* === Finální grafická úprava: pečetě, čas, status, větší indicie === */
+.topbar{display:grid!important;grid-template-columns:100px 1fr 100px!important;align-items:start!important;gap:10px!important;margin-bottom:4px!important}
+.modeSeal,.sectionSeal{width:96px!important;height:96px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;font-weight:1000!important;line-height:1.02!important;padding:8px!important;white-space:pre-line!important;border:3px solid #ffce55!important;box-shadow:inset 0 0 18px rgba(255,255,255,.22),inset 0 -18px 28px rgba(0,0,0,.22),0 0 0 3px rgba(80,32,8,.9),0 7px 18px rgba(0,0,0,.48)!important}
+.modeSeal{font-size:19px!important;letter-spacing:.02em!important}
+.modeSeal.training{background:linear-gradient(180deg,#8cecff 0%,#15738a 72%,#083947 100%)!important;color:#06212a!important}
+.modeSeal.mini{background:linear-gradient(180deg,#e2bbff 0%,#7c38bd 72%,#37165d 100%)!important;color:#1c082e!important}
+.modeSeal.challenge{background:linear-gradient(180deg,#d0ff9e 0%,#4d9a26 72%,#1e4a10 100%)!important;color:#081f00!important}
+.modeSeal.test{background:linear-gradient(180deg,#ffb1a9 0%,#d83333 72%,#7b1212 100%)!important;color:#fff!important}
+.sectionSeal{background:linear-gradient(180deg,#d9912e 0%,#8c4c12 70%,#4e2307 100%)!important;color:#fff!important;font-size:18px!important;letter-spacing:.01em!important}
+.timeCenter{text-align:center!important;font-size:clamp(42px,6.5vw,74px)!important;line-height:.95!important;font-weight:1000!important;color:#fff!important;text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 16px rgba(255,255,255,.35)!important}
+.timeCenter .statusMini{display:block!important;width:min(520px,88%)!important;margin:8px auto 0!important;padding:7px 14px!important;border-radius:999px!important;border:1px solid rgba(255,211,106,.7)!important;background:rgba(0,0,0,.28)!important;font-size:clamp(20px,3.2vw,31px)!important;line-height:1.1!important;font-weight:1000!important;color:#7cff26!important;text-shadow:0 0 10px rgba(124,255,38,.35)!important}
+.timeCenter .statusMini .score{color:#20e6ff!important;text-shadow:0 0 10px rgba(32,230,255,.35)!important}
+.timeCenter .statusMini .dot{color:#ffd36a!important;padding:0 .35em!important}
+.modeLine{display:none!important}.badge{display:none!important}
+.promptType{color:#ff9db3!important;font-size:clamp(24px,4.4vw,48px)!important;line-height:1.08!important;margin:8px 0 12px!important;text-shadow:0 2px 0 rgba(0,0,0,.55),0 0 12px rgba(255,157,179,.24)!important}
+.clueBox{font-size:clamp(27px,5vw,56px)!important;padding:16px!important;line-height:1.12!important;border-color:rgba(255,190,35,.86)!important}
+.clues{gap:10px!important}.clue{padding:10px 12px!important;border-radius:16px!important;background:rgba(255,255,255,.065)!important}
+.answerRow{display:grid!important;grid-template-columns:1fr 74px!important;gap:0!important;margin-top:12px!important}
+.answerRow .input{border-radius:18px 0 0 18px!important;border-right:0!important;font-size:clamp(22px,3.2vw,34px)!important;padding:15px 16px!important}
+.answerRow #submitBtn{border-radius:0 18px 18px 0!important;min-width:74px!important;width:74px!important;padding:8px!important;font-size:36px!important;box-shadow:0 7px 0 #612507,0 9px 16px rgba(0,0,0,.32)!important}
+.mistakeMode .answerRow{display:flex!important;justify-content:center!important}
+.mistakeMode .answerRow #submitBtn{border-radius:16px!important;width:min(520px,100%)!important;min-width:0!important;font-size:clamp(20px,5vw,32px)!important;padding:16px 18px!important}
+@media(max-width:700px){
+.wrap{padding:6px!important;gap:6px!important}.card{padding:8px!important;border-radius:15px!important}
+.topbar{grid-template-columns:78px 1fr 78px!important;gap:4px!important;align-items:start!important}
+.modeSeal,.sectionSeal{width:74px!important;height:74px!important;padding:5px!important;border-width:2px!important}
+.modeSeal{font-size:15px!important}.sectionSeal{font-size:13px!important}
+.timeCenter{font-size:clamp(34px,10vw,58px)!important}
+.timeCenter .statusMini{width:96%!important;margin-top:5px!important;padding:5px 8px!important;font-size:clamp(17px,4.7vw,24px)!important}
+.promptType{font-size:clamp(22px,6vw,34px)!important;margin:6px 0 9px!important}
+.clueBox{font-size:clamp(25px,7.2vw,39px)!important;padding:10px!important;line-height:1.1!important}
+.clues{gap:8px!important}.clue{padding:8px 8px!important}
+.answerRow{grid-template-columns:1fr 64px!important;margin-top:9px!important}
+.answerRow .input{font-size:clamp(20px,5.3vw,28px)!important;padding:13px 11px!important}
+.answerRow #submitBtn{width:64px!important;min-width:64px!important;font-size:32px!important}
+.row{gap:6px!important}.row .btn{font-size:14px!important;padding:10px 8px!important}
+}
+
+
+/* === Doladění po reálném testu: čas, pečetě, mírně menší indicie === */
+.topbar{
+  grid-template-columns:112px 1fr 112px !important;
+  align-items:start !important;
+}
+.modeSeal,.sectionSeal{
+  width:104px !important;
+  height:104px !important;
+  min-width:104px !important;
+  min-height:104px !important;
+  max-width:104px !important;
+  max-height:104px !important;
+}
+.modeSeal{
+  font-size:22px !important;
+}
+.sectionSeal{
+  font-size:20px !important;
+  background:linear-gradient(180deg,#e4a13a 0%,#9a5618 68%,#542707 100%) !important;
+  color:#fff !important;
+}
+.timeCenter{
+  font-size:clamp(46px,7vw,78px) !important;
+  min-height:78px !important;
+}
+.timeCenter #time{
+  display:block !important;
+}
+.clueBox{
+  font-size:clamp(24px,4.4vw,48px) !important;
+  padding:14px !important;
+  line-height:1.12 !important;
+}
+.clues{
+  gap:9px !important;
+}
+.clue{
+  padding:9px 11px !important;
+}
+@media(max-width:700px){
+  .topbar{
+    grid-template-columns:84px 1fr 84px !important;
+    gap:5px !important;
+  }
+  .modeSeal,.sectionSeal{
+    width:80px !important;
+    height:80px !important;
+    min-width:80px !important;
+    min-height:80px !important;
+    max-width:80px !important;
+    max-height:80px !important;
+  }
+  .modeSeal{
+    font-size:17px !important;
+  }
+  .sectionSeal{
+    font-size:14px !important;
+  }
+  .timeCenter{
+    font-size:clamp(36px,10vw,58px) !important;
+    min-height:64px !important;
+  }
+  .timeCenter .statusMini{
+    font-size:clamp(16px,4.5vw,22px) !important;
+  }
+  .clueBox{
+    font-size:clamp(23px,6.5vw,35px) !important;
+    padding:9px !important;
+  }
+}
+
+
+/* === Finální mobilní rozvržení podle schváleného návrhu s klávesnicí === */
+@media(max-width:700px){
+  .wrap{padding:4px!important;gap:4px!important;min-height:100dvh!important}
+  .card{padding:6px 7px 7px!important;border-radius:14px!important}
+
+  .topbar{
+    display:grid!important;
+    grid-template-columns:72px 1fr 72px!important;
+    grid-template-rows:auto auto!important;
+    column-gap:4px!important;
+    row-gap:0!important;
+    align-items:start!important;
+    margin:0 0 2px!important;
+  }
+  .modeSeal{grid-column:1!important;grid-row:1 / span 2!important;justify-self:start!important}
+  .sectionSeal{grid-column:3!important;grid-row:1 / span 2!important;justify-self:end!important}
+  .modeSeal,.sectionSeal{
+    width:68px!important;height:68px!important;min-width:68px!important;min-height:68px!important;
+    max-width:68px!important;max-height:68px!important;padding:4px!important;border-width:2px!important;
+  }
+  .modeSeal{font-size:15px!important}
+  .sectionSeal{
+    font-size:13px!important;
+    background:linear-gradient(180deg,#e4a13a 0%,#9a5618 68%,#542707 100%)!important;
+    color:#fff!important;
+  }
+  .timeCenter{
+    grid-column:2!important;grid-row:1 / span 2!important;align-self:start!important;
+    font-size:clamp(32px,9vw,48px)!important;line-height:.9!important;
+    min-height:auto!important;padding-top:0!important;
+  }
+  .timeCenter #time{display:block!important;margin:0!important}
+  .timeCenter .statusMini{
+    display:block!important;width:100%!important;margin:5px auto 0!important;padding:3px 5px!important;
+    border-radius:999px!important;font-size:clamp(15px,4.3vw,21px)!important;
+    line-height:1.05!important;white-space:nowrap!important;
+  }
+
+  .promptType{
+    font-size:clamp(22px,6vw,32px)!important;
+    line-height:1.08!important;
+    margin:6px 0 7px!important;
+  }
+
+  .clueBox{
+    font-size:clamp(25px,7.1vw,38px)!important;
+    padding:7px!important;
+    line-height:1.06!important;
+    border-radius:16px!important;
+  }
+  .clues{gap:4px!important}
+  .clue{
+    padding:6px 7px!important;
+    border-radius:13px!important;
+    line-height:1.05!important;
+  }
+
+  .answerRow{
+    display:grid!important;
+    grid-template-columns:1fr 62px!important;
+    gap:0!important;
+    margin-top:6px!important;
+  }
+  .answerRow .input{
+    font-size:clamp(20px,5.3vw,28px)!important;
+    padding:11px 10px!important;
+    border-radius:16px 0 0 16px!important;
+    border-right:0!important;
+    min-height:52px!important;
+  }
+  .answerRow #submitBtn{
+    width:62px!important;
+    min-width:62px!important;
+    font-size:31px!important;
+    padding:7px!important;
+    border-radius:0 16px 16px 0!important;
+  }
+
+  .row{gap:5px!important;margin-top:4px!important}
+  .row .btn{font-size:13px!important;padding:8px 7px!important}
+  .feedback{min-height:32px!important;margin:3px!important}
+
+  .mistakeMode .clueBox{
+    font-size:clamp(18px,5vw,27px)!important;
+    padding:6px!important;
+  }
+  .mistakeMode .answerRow{
+    display:flex!important;
+    justify-content:center!important;
+    margin-top:6px!important;
+  }
+  .mistakeMode .answerRow #submitBtn{
+    border-radius:16px!important;
+    width:min(520px,100%)!important;
+    min-width:0!important;
+    font-size:clamp(19px,5vw,30px)!important;
+    padding:13px 16px!important;
+  }
+}
+
+
+/* === Android fix: pevné zóny v horním panelu + viditelné odpovědní pole === */
+@media(max-width:700px){
+  .wrap{
+    padding:4px !important;
+    gap:4px !important;
+    min-height:100dvh !important;
+  }
+  .card{
+    position:relative !important;
+    padding:6px 7px 7px !important;
+    border-radius:14px !important;
+  }
+
+  .topbar{
+    position:relative !important;
+    display:block !important;
+    height:112px !important;
+    margin:0 0 4px !important;
+  }
+  .modeSeal,.sectionSeal{
+    position:absolute !important;
+    top:0 !important;
+    width:68px !important;
+    height:68px !important;
+    min-width:68px !important;
+    min-height:68px !important;
+    max-width:68px !important;
+    max-height:68px !important;
+    padding:4px !important;
+    border-width:2px !important;
+    z-index:2 !important;
+  }
+  .modeSeal{
+    left:0 !important;
+    font-size:15px !important;
+  }
+  .sectionSeal{
+    right:0 !important;
+    font-size:13px !important;
+    background:linear-gradient(180deg,#e4a13a 0%,#9a5618 68%,#542707 100%) !important;
+    color:#fff !important;
+  }
+  .timeCenter{
+    position:absolute !important;
+    top:0 !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:calc(100% - 148px) !important;
+    min-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    text-align:center !important;
+    font-size:clamp(34px,9.2vw,50px) !important;
+    line-height:.9 !important;
+    z-index:1 !important;
+  }
+  .timeCenter #time{
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  .timeCenter .statusMini{
+    display:block !important;
+    width:100% !important;
+    margin:5px auto 0 !important;
+    padding:3px 4px !important;
+    border-radius:999px !important;
+    font-size:clamp(14px,4vw,20px) !important;
+    line-height:1.05 !important;
+    white-space:normal !important;
+  }
+
+  .promptType{
+    font-size:clamp(21px,5.6vw,31px) !important;
+    line-height:1.05 !important;
+    margin:4px 0 6px !important;
+  }
+
+  .clueBox{
+    font-size:clamp(23px,6.3vw,35px) !important;
+    padding:6px !important;
+    line-height:1.04 !important;
+    border-radius:16px !important;
+  }
+  .clues{
+    gap:3px !important;
+  }
+  .clue{
+    padding:5px 7px !important;
+    border-radius:12px !important;
+    line-height:1.04 !important;
+  }
+
+  .answerRow{
+    display:grid !important;
+    grid-template-columns:1fr 62px !important;
+    gap:0 !important;
+    margin-top:5px !important;
+  }
+  .answerRow .input{
+    font-size:clamp(20px,5.2vw,27px) !important;
+    padding:10px 10px !important;
+    min-height:50px !important;
+    border-radius:16px 0 0 16px !important;
+    border-right:0 !important;
+  }
+  .answerRow #submitBtn{
+    width:62px !important;
+    min-width:62px !important;
+    font-size:30px !important;
+    padding:7px !important;
+    border-radius:0 16px 16px 0 !important;
+  }
+
+  .feedback{
+    min-height:28px !important;
+    margin:2px !important;
+  }
+  .row{
+    gap:5px !important;
+    margin-top:3px !important;
+  }
+  .row .btn{
+    font-size:13px !important;
+    padding:8px 7px !important;
+  }
+
+  body.keyboardOpen .row{
+    display:none !important;
+  }
+  body.keyboardOpen .topbar{
+    height:104px !important;
+  }
+  body.keyboardOpen .modeSeal,
+  body.keyboardOpen .sectionSeal{
+    width:64px !important;
+    height:64px !important;
+    min-width:64px !important;
+    min-height:64px !important;
+    max-width:64px !important;
+    max-height:64px !important;
+  }
+  body.keyboardOpen .timeCenter{
+    width:calc(100% - 140px) !important;
+    font-size:clamp(32px,8.7vw,46px) !important;
+  }
+  body.keyboardOpen .promptType{
+    margin:3px 0 5px !important;
+    font-size:clamp(20px,5.4vw,30px) !important;
+  }
+  body.keyboardOpen .clueBox{
+    font-size:clamp(22px,6vw,34px) !important;
+    padding:5px !important;
+  }
+  body.keyboardOpen .clues{
+    gap:2px !important;
+  }
+  body.keyboardOpen .clue{
+    padding:4px 6px !important;
+  }
+  body.keyboardOpen .answerRow{
+    margin-top:4px !important;
+  }
+
+  .mistakeMode .topbar{
+    display:none !important;
+  }
+  .mistakeMode .answerRow{
+    display:flex !important;
+    justify-content:center !important;
+  }
+  .mistakeMode .answerRow #submitBtn{
+    border-radius:16px !important;
+    width:min(520px,100%) !important;
+    min-width:0 !important;
+    font-size:clamp(19px,5vw,30px) !important;
+    padding:13px 16px !important;
+  }
+}
+
+</style>
+
+<style>
+.results-btn{
+  margin: .45rem;
+  padding: .7rem 1rem;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+</style>
+
+
+<style>
+.optionsGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.optionBtn{appearance:none;border:2px solid rgba(255,211,106,.48);border-radius:16px;padding:14px 16px;background:rgba(255,255,255,.08);color:#fff7df;font-weight:900;font-size:clamp(16px,2.4vw,22px);text-align:left;cursor:pointer;line-height:1.25}
+.optionBtn:hover{background:rgba(255,211,106,.15)}
+.optionBtn.correct{border-color:#78f0a0;background:rgba(120,240,160,.16)}
+.optionBtn.wrong{border-color:#ff5252;background:rgba(255,82,82,.16)}
+.optionLetter{display:inline-block;min-width:1.8em;color:#ffd36a}
+@media(max-width:700px){.optionsGrid{grid-template-columns:1fr;gap:8px}.optionBtn{padding:11px 12px;font-size:16px}}
+</style>
+
+</head>
+<body>
+<div class="wrap" id="app"></div><div class="confetti" id="confetti"></div>
+<script>
+const SHEET_ID = "1pkj1ISkzdtgNphGLGwakezT1WzHJxz-pv2OLnCmfnLk";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrwi1N_f2ddRf2XsOLBtDEFmcxAdWPpW170_dtGNSXUl8vejZl1dhxkqMYhjdxVs8u/exec";
+const RESULTS_SHEET_URL = "https://docs.google.com/spreadsheets/d/1pkj1ISkzdtgNphGLGwakezT1WzHJxz-pv2OLnCmfnLk/edit?usp=sharing";
+const QUESTIONS = [
+  {
+    "id": "sr-001",
+    "question": "Do kolika kalendářních dnů od počátku nepřítomnosti musí být škole doložen její důvod?",
+    "options": [
+      "Do 2 kalendářních dnů",
+      "Do 3 kalendářních dnů",
+      "Do 5 kalendářních dnů",
+      "Do 7 kalendářních dnů"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-002",
+    "question": "Jakým způsobem se standardně dokládá důvod nepřítomnosti žáka?",
+    "options": [
+      "E-mailem na sekretariát",
+      "Telefonicky třídnímu učiteli",
+      "Písemnou omluvenkou",
+      "Elektronicky prostřednictvím systému Bakaláři"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-003",
+    "question": "Kdo dokládá důvod nepřítomnosti zletilého žáka?",
+    "options": [
+      "Zletilý žák sám",
+      "Vždy jeho rodič",
+      "Třídní učitel",
+      "Pouze lékař"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-004",
+    "question": "Kdy musí být sdělen důvod nepřítomnosti na praktickém vyučování?",
+    "options": [
+      "Do 3 pracovních dnů",
+      "Do konce týdne",
+      "Ihned",
+      "Při návratu do školy"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-005",
+    "question": "Kdo může žáka uvolnit z jedné vyučovací hodiny při předem známé nepřítomnosti?",
+    "options": [
+      "Pouze třídní učitel",
+      "Příslušný vyučující",
+      "Pouze zástupce ředitele",
+      "Pouze ředitel školy"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-006",
+    "question": "Kdo může žáka uvolnit z výuky na dobu do jednoho vyučovacího dne?",
+    "options": [
+      "Kterýkoliv vyučující",
+      "Zástupce ředitele",
+      "Pouze ředitel školy",
+      "Třídní učitel"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-007",
+    "question": "Kdo rozhoduje o předem známém uvolnění žáka na dobu delší než jeden vyučovací den?",
+    "options": [
+      "Třídní učitel",
+      "Učitel, který má první vyučovací hodinu",
+      "Ředitel školy",
+      "Výchovný poradce"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-008",
+    "question": "Co má třídní služba udělat, pokud se vyučující nedostaví do vyučovací hodiny?",
+    "options": [
+      "Po 5 minutách to oznámit zástupci ředitele nebo na sekretariátu",
+      "Po 10 minutách rozpustit třídu",
+      "Po 15 minutách kontaktovat třídního učitele",
+      "Vyčkat do konce vyučovací hodiny"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-009",
+    "question": "Komu má žák okamžitě nahlásit ztrátu osobní věci ve škole?",
+    "options": [
+      "Řediteli školy",
+      "Třídnímu učiteli",
+      "Sekretářce školy",
+      "Učiteli pověřenému dohledem"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-010",
+    "question": "Komu má žák okamžitě nahlásit úraz, který se mu stal ve škole nebo při školní činnosti?",
+    "options": [
+      "Pouze třídnímu učiteli",
+      "Vyučujícímu nebo učiteli pověřenému dohledem",
+      "Pouze zákonnému zástupci",
+      "Výchovnému poradci"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-011",
+    "question": "Může žák během vyučovací hodiny používat mobilní telefon?",
+    "options": [
+      "Ano, pokud má vypnutý zvuk",
+      "Ano, pokud je plnoletý",
+      "Ne, s výjimkou zdravotních důvodů nebo pokynu vyučujícího",
+      "Ne, bez jakékoliv výjimky"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-012",
+    "question": "Může žák bez svolení pořizovat zvukový nebo obrazový záznam učitele či spolužáků?",
+    "options": [
+      "Ne",
+      "Ano, pokud ho nezveřejní",
+      "Ano, ale pouze zvukový",
+      "Ano, pokud je plnoletý"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-013",
+    "question": "Jak školní řád posuzuje svévolné opuštění školy nebo školní akce?",
+    "options": [
+      "Jako běžný přestupek",
+      "Pouze jako neomluvenou absenci",
+      "Jako méně závažné porušení povinností",
+      "Jako hrubé porušení školního řádu"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-014",
+    "question": "Které tvrzení o kouření ve škole je správné?",
+    "options": [
+      "Plnoletí žáci mohou kouřit na určeném místě",
+      "Kouření je zakázáno",
+      "Kouřit lze mimo vyučovací hodiny",
+      "Zákaz se týká pouze nezletilých"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-015",
+    "question": "Vztahuje se zákaz kouření také na elektronické cigarety?",
+    "options": [
+      "Jen u nezletilých",
+      "Jen během vyučování",
+      "Ano",
+      "Ne"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-016",
+    "question": "Jak se školní řád staví ke kratomu ve škole?",
+    "options": [
+      "Jeho užívání a nakládání s ním je zakázáno",
+      "Je povolen plnoletým žákům",
+      "Je povolen pouze o přestávkách",
+      "Školní řád se o něm nezmiňuje"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-017",
+    "question": "Které oblečení školní řád označuje jako nevhodné do školy?",
+    "options": [
+      "Pouze špinavé oblečení",
+      "Veškeré sportovní oblečení",
+      "Džíny a sportovní obuv",
+      "Špinavé či roztrhané oblečení a sportovní teplákové soupravy"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-018",
+    "question": "Žák přechází na jinou budovu školy pouze na jednu vyučovací hodinu. Musí se na této budově přezout?",
+    "options": [
+      "Ne, protože tam má pouze jednu hodinu",
+      "Ano, povinnost přezouvání platí i v tomto případě",
+      "Ne, pokud se následně vrací na původní budovu",
+      "Pouze tehdy, jde-li o praktické vyučování"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-019",
+    "question": "Jak mají žáci podle školního řádu oslovovat pracovníky školy?",
+    "options": [
+      "Vždy příjmením",
+      "Pedagogy titulem, ostatní zaměstnance příjmením",
+      "Akademickým titulem nebo pracovním zařazením",
+      "Způsob oslovování školní řád neupravuje"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-020",
+    "question": "Co platí pro účast žáka na praktickém vyučování a souvislé odborné praxi?",
+    "options": [
+      "Účast je povinná a případné absence se řeší individuálně",
+      "Stačí absolvovat 75 % výuky",
+      "Plnoletý žák si může část praxe omluvit sám",
+      "Účast je dobrovolná, pokud má žák dobrý prospěch"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-021",
+    "question": "Co platí pro šperky a piercing při praktickém vyučování?",
+    "options": [
+      "Jsou povoleny, pokud nejsou nápadné",
+      "Zakázán je pouze piercing",
+      "Omezení platí jen pro nezletilé",
+      "Šperky ani piercing nejsou povoleny"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-022",
+    "question": "Které nehty nejsou povoleny při praktické výuce v odborné učebně ani při odborné praxi mimo školu?",
+    "options": [
+      "Pouze velmi dlouhé",
+      "Umělé, gelové ani nalakované",
+      "Pouze červeně nalakované",
+      "Školní řád nehty neupravuje"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-023",
+    "question": "Jak mají být při odborné praxi upraveny dlouhé vlasy?",
+    "options": [
+      "Úprava není stanovena",
+      "Musí být zkráceny",
+      "Musí být sepnuté",
+      "Stačí je schovat za uši"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-024",
+    "question": "Co platí pro viditelné tetování při odborné praxi?",
+    "options": [
+      "Musí být překryto",
+      "Je vždy bez omezení povoleno",
+      "Je povoleno pouze zletilým",
+      "Žák s tetováním se odborné praxe nemůže účastnit"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-025",
+    "question": "Jak má být při praktickém vyučování zajištěn ochranný oděv žáka?",
+    "options": [
+      "Stačí, aby byl označený",
+      "Stačí, aby byl čistý",
+      "Žádné požadavky stanoveny nejsou",
+      "Má být čistý a označený"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-026",
+    "question": "Může žák při cestě na praktické vyučování použít vlastní motorové vozidlo?",
+    "options": [
+      "Ano, pokud je plnoletý",
+      "Ne",
+      "Ano, se souhlasem rodičů",
+      "Ano, pokud má řidičský průkaz"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-027",
+    "question": "Jakou cestu musí žák podle školního řádu zvolit při přechodu na určené pracoviště?",
+    "options": [
+      "Jakoukoliv podle vlastního uvážení",
+      "Nejméně frekventovanou",
+      "Nejkratší možnou",
+      "Vždy cestu veřejnou dopravou"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-028",
+    "question": "Kolik písemných prací plánovaných na celou vyučovací hodinu lze podle školního řádu psát v jednom dni?",
+    "options": [
+      "Jednu",
+      "Dvě",
+      "Tři",
+      "Počet není omezen"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-029",
+    "question": "Jak dlouho předem má být oznámena celohodinová písemná práce?",
+    "options": [
+      "Nejméně jeden den",
+      "Nejméně tři dny",
+      "Nejméně pět pracovních dnů",
+      "Nejméně týden"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-030",
+    "question": "Kolikrát nejméně musí být žák za pololetí hodnocen v předmětu s jednohodinovou týdenní dotací?",
+    "options": [
+      "2×",
+      "3×",
+      "4×",
+      "5×"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-031",
+    "question": "Kolikrát nejméně musí být žák za pololetí hodnocen v předmětu s dvouhodinovou týdenní dotací?",
+    "options": [
+      "2×",
+      "3×",
+      "4×",
+      "5×"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-032",
+    "question": "Kolikrát nejméně musí být žák za pololetí hodnocen v předmětu s týdenní dotací tři a více hodin?",
+    "options": [
+      "5×",
+      "4×",
+      "6×",
+      "3×"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-033",
+    "question": "Které výsledky musí žák splnit, aby prospěl s vyznamenáním?",
+    "options": [
+      "Průměr do 2,00 a žádná nedostatečná",
+      "Průměr nejvýše 1,50 bez ohledu na jednotlivé známky",
+      "Samé jedničky a nejvýše jedna dvojka",
+      "Žádná známka horší než 2, průměr nejvýše 1,50 a velmi dobré chování"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-034",
+    "question": "Do kolika pracovních dnů lze při pochybnostech o správnosti hodnocení na konci pololetí požádat o jeho přezkoumání?",
+    "options": [
+      "Do 2 pracovních dnů",
+      "Do 3 pracovních dnů",
+      "Do 5 pracovních dnů",
+      "Do 7 pracovních dnů"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-035",
+    "question": "Z kolika povinných předmětů může žák na konci druhého pololetí neprospět, aby mohl konat opravné zkoušky?",
+    "options": [
+      "Pouze z jednoho",
+      "Nejvýše ze tří",
+      "Nejvýše ze dvou",
+      "Počet není omezen"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-036",
+    "question": "Může žák přinášet do školy alkohol?",
+    "options": [
+      "Ne",
+      "Ano, pokud jej nebude konzumovat",
+      "Ano, pokud je plnoletý",
+      "Ano, pouze při školních společenských akcích"
+    ],
+    "correct": 0
+  },
+  {
+    "id": "sr-037",
+    "question": "Může žák přijít do školy pod vlivem alkoholu nebo jiné návykové látky?",
+    "options": [
+      "Ano, pokud nenarušuje výuku",
+      "Ano, pokud je plnoletý",
+      "Pouze pokud nejde na praktické vyučování",
+      "Ne"
+    ],
+    "correct": 3
+  },
+  {
+    "id": "sr-038",
+    "question": "Může žák do školy přinášet předměty, kterými by mohl ohrozit zdraví nebo bezpečnost ostatních?",
+    "options": [
+      "Ano, pokud je nevyndá z tašky",
+      "Ne",
+      "Ano, pokud je plnoletý",
+      "Ano, pokud je nikomu nepůjčí"
+    ],
+    "correct": 1
+  },
+  {
+    "id": "sr-039",
+    "question": "Co má žák udělat, zjistí-li závadu, která by mohla ohrozit bezpečnost?",
+    "options": [
+      "Závadu sám opravit",
+      "Ignorovat ji, pokud ji nezpůsobil",
+      "Oznámit ji zaměstnanci školy",
+      "Oznámit ji až třídnímu učiteli při nejbližší třídnické hodině"
+    ],
+    "correct": 2
+  },
+  {
+    "id": "sr-040",
+    "question": "Co platí pro používání předepsaných ochranných prostředků při praktickém vyučování?",
+    "options": [
+      "Žák je musí používat a respektovat stanovená bezpečnostní pravidla",
+      "Jsou dobrovolné pro zletilé žáky",
+      "Používají se pouze při práci s chemickými látkami",
+      "Žák se může rozhodnout, zda je potřebuje"
+    ],
+    "correct": 0
+  }
+];
+const TEST_COUNT = 16;
+const TEST_TIME = 25, CHALLENGE_TIME = 25;
+let state = {screen:'home', mode:null, section:null, questions:[], index:0, current:null, score:0, wrong:0, streak:0, timer:null, timeLeft:0, locked:false, name:'', clazz:'', cheated:false, startTime:null, finishSent:false,awaitNext:false};
+const app = document.getElementById('app');
+let audioCtx = null;
+function norm(s){
+  return (s||'').toString().trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[.,;:!?()„“"'`´]/g,' ')
+    .replace(/\s+/g,' ');
+}
+function editDistanceOneOrLess(a,b){
+  a=norm(a); b=norm(b);
+  if(a===b)return true;
+  if(Math.abs(a.length-b.length)>1)return false;
+  let i=0,j=0,diff=0;
+  while(i<a.length && j<b.length){
+    if(a[i]===b[j]){i++;j++;continue;}
+    diff++;
+    if(diff>1)return false;
+    if(a.length===b.length){i++;j++;}
+    else if(a.length>b.length){i++;}
+    else{j++;}
+  }
+  if(i<a.length || j<b.length)diff++;
+  return diff<=1;
+}
+
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pick(arr,n){return shuffle(arr).slice(0,Math.min(n,arr.length))}
+function allItems(){return QUESTIONS.map(it=>({...it}))}
+function activeProtected(){return state.mode==='test' && state.screen==='question' && !state.finishSent;}
+function unlockAudio(){try{audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume();}catch(e){}}
+function onTap(el,fn){el.addEventListener('click',e=>{unlockAudio(); e.preventDefault(); fn(e);},{passive:false})}
+function setModeClass(mode){document.body.className = mode ? 'mode-'+mode : '';}
+function render(html, mode=state.mode){setModeClass(mode); app.innerHTML=html; document.querySelectorAll('[data-action]').forEach(b=>onTap(b,()=>actions[b.dataset.action](b.dataset)));}
+function esc(s){return (s||'').toString().replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function home(){clearTimer(); state={...state,screen:'home',mode:null,section:null,questions:[],index:0,score:0,wrong:0,streak:0,cheated:false,finishSent:false}; render(`<div class="card"><h1 class="title">Školní řád</h1>
+<button class="secondary results-btn" type="button" onclick="window.open(RESULTS_SHEET_URL, '_blank')">📊 Výsledková tabulka</button>
+<p class="subtitle">Test znalostí školního řádu</p><div class="row"><button class="btn testBtn" data-action="nameTest">TEST</button></div><p class="small" style="text-align:center;margin-top:14px">Databáze: ${QUESTIONS.length} otázek. Otázky i varianty odpovědí se losují náhodně.</p></div>`, null)}
+function nameScreen(){render(`<div class="card test"><h1 class="title">Test</h1><div class="nameBox"><input class="input" id="name" placeholder="Jméno žáka"><input class="input" id="clazz" placeholder="Třída"><button class="btn" id="startBtn">ZAČÍT</button><button class="btn ghost" data-action="home">HLAVNÍ MENU</button></div></div>`, 'test');onTap(document.getElementById('startBtn'),()=>{state.name=document.getElementById('name').value.trim();state.clazz=document.getElementById('clazz').value.trim();startTest();})}
+function startTest(){state={...state,screen:'question',mode:'test',section:null,questions:pick(allItems(),TEST_COUNT),index:0,score:0,wrong:0,locked:false,awaitNext:false,startTime:Date.now(),cheated:false,finishSent:false};nextQuestion();}
+function nextQuestion(){clearTimer();state.locked=false;state.awaitNext=false;if(state.index>=state.questions.length){return finish('test')}state.current={...state.questions[state.index]};state.screen='question';renderQuestion();startTimer(TEST_TIME);}
+function statusLine(){return `<span>OTÁZKA ${state.index+1}/${state.questions.length}</span><span class="dot">•</span><span class="score">BODY ${state.score}</span>`;}
+
+function modeLabel(){return 'TEST'}
+function renderQuestion(){
+  let it=state.current;
+  let indexed=it.options.map((text,i)=>({text, original:i}));
+  let mixed=shuffle(indexed);
+  state.current.displayOptions=mixed;
+  let buttons=mixed.map((o,i)=>`<button class="optionBtn" data-opt="${i}"><span class="optionLetter">${String.fromCharCode(65+i)})</span>${esc(o.text)}</button>`).join('');
+  render(`<div class="card test">
+    <div class="topbar">
+      <div class="modeSeal test">TEST</div>
+      <div class="timeCenter"><span id="time">${state.timeLeft || ''}</span><span class="statusMini">${statusLine()}</span></div>
+      <div class="sectionSeal">ŠKOLNÍ<br>ŘÁD</div>
+    </div>
+    <div class="promptType">Vyber jednu správnou odpověď.</div>
+    <div class="clueBox">${esc(it.question)}</div>
+    <div class="optionsGrid">${buttons}</div>
+    <div class="feedback" id="feedback"></div>
+    <div class="row"><button class="btn ghost" data-action="home">HLAVNÍ MENU</button></div>
+  </div>`, 'test');
+  document.querySelectorAll('.optionBtn').forEach(btn=>onTap(btn,()=>submitChoice(Number(btn.dataset.opt))));
+}
+
+function submitChoice(displayIndex){
+  if(state.locked)return;
+  state.locked=true;
+  clearTimer();
+  let chosen=state.current.displayOptions[displayIndex];
+  let good=chosen.original===state.current.correct;
+  let fb=document.getElementById('feedback');
+  let buttons=[...document.querySelectorAll('.optionBtn')];
+  buttons.forEach((b,i)=>{
+    b.disabled=true;
+    if(state.current.displayOptions[i].original===state.current.correct)b.classList.add('correct');
+    if(i===displayIndex && !good)b.classList.add('wrong');
+  });
+  if(good){
+    state.score++;
+    fb.innerHTML='<span class="ok">SPRÁVNĚ!</span>';
+    soundCorrect();
+  }else{
+    state.wrong++;
+    fb.innerHTML=`<span class="bad">CHYBA</span><br><span class="small">Správně: ${esc(state.current.options[state.current.correct])}</span>`;
+    soundWrong();
+  }
+  state.index++;
+  if(state.index>=state.questions.length){
+    setTimeout(()=>finish('test'), good ? 700 : 1400);
+  }else{
+    setTimeout(nextQuestion, good ? 700 : 1400);
+  }
+}
+function startTimer(sec){state.timeLeft=sec;updateTime();state.timer=setInterval(()=>{state.timeLeft--;updateTime();if(state.timeLeft<=0){clearTimer();timeoutAnswer();}},1000)}
+function updateTime(){let el=document.getElementById('time');if(el)el.textContent=state.timeLeft;}
+function clearTimer(){if(state.timer){clearInterval(state.timer);state.timer=null}}
+function timeoutAnswer(){
+  if(state.locked)return;
+  state.locked=true;
+  state.wrong++;
+  let fb=document.getElementById('feedback');
+  document.querySelectorAll('.optionBtn').forEach((b,i)=>{
+    b.disabled=true;
+    if(state.current.displayOptions[i].original===state.current.correct)b.classList.add('correct');
+  });
+  if(fb)fb.innerHTML=`<span class="bad">ČAS VYPRŠEL</span><br><span class="small">Správně: ${esc(state.current.options[state.current.correct])}</span>`;
+  soundWrong();
+  state.index++;
+  if(state.index>=state.questions.length){
+    setTimeout(()=>finish('test'),1400);
+  }else{
+    setTimeout(nextQuestion,1400);
+  }
+}
+function grade(score,total){let p=score/total;if(p>=0.88)return 1;if(p>=0.75)return 2;if(p>=0.56)return 3;if(p>=0.38)return 4;return 5;}
+function finish(kind){clearTimer();state.screen='finish';let total=state.questions.length;let znamka=grade(state.score,total);if(state.cheated)znamka=6;if(znamka===1)confetti();sendResult(znamka,total,kind);render(`<div class="card test"><h1 class="title">VÝSLEDEK</h1><div class="result"><b>Jméno:</b> ${esc(state.name||'—')}<br><b>Třída:</b> ${esc(state.clazz||'—')}<br><b>Režim:</b> TEST<br><b>Body:</b> ${state.score}/${total}<br><b>Známka:</b> ${znamka}</div><div class="row" style="margin-top:18px"><button class="btn" data-action="home">HLAVNÍ MENU</button><button class="btn ghost" type="button" onclick="window.open(RESULTS_SHEET_URL, '_blank')">📊 VÝSLEDKOVÁ TABULKA</button></div><p class="small" style="text-align:center">Výsledek se odesílá do tabulky.</p></div>`, 'test')}
+
+function cheatFinish(reason){
+  if(!activeProtected())return;
+  state.cheated=true;
+  state.locked=true;
+  state.screen='finish';
+  clearTimer();
+  soundCheat();
+  let total=state.questions.length||0;
+  sendResult(6,total,'PODVOD: '+reason,true);
+  render(`<div class="card cheat"><h1 class="title">PODVOD</h1><div class="result"><b>Pokus byl ukončen.</b><br>Bylo zjištěno opuštění testovacího okna.<br><br><b>Známka:</b> 6</div><div class="row" style="margin-top:18px"><button class="btn" data-action="home">HLAVNÍ MENU</button><button class="btn ghost" type="button" onclick="window.open(RESULTS_SHEET_URL, '_blank')">📊 VÝSLEDKOVÁ TABULKA</button></div></div>`, 'test');
+}
+function buildPayload(znamka,total,kind){
+  return {
+    timestamp:new Date().toISOString(),
+    jmeno:state.name,
+    trida:state.clazz,
+    znamka,
+    rezim:'test',
+    oddil:'školní řád',
+    body:state.score,
+    celkem:total,
+    spravne:state.score,
+    spatne:state.wrong,
+    poznamka:state.cheated?'PODVOD':kind,
+    sheetId:SHEET_ID,
+    app:'Školní řád'
+  };
+}
+function sendResult(znamka,total,kind,urgent=false){
+  if(state.finishSent && !urgent)return;
+  state.finishSent=true;
+  const payload=buildPayload(znamka,total,kind);
+  payload.odeslano="ano";
+  localStorage.setItem('skolniRad_lastResult',JSON.stringify(payload));
+
+  try{
+    if(!GAS_WEB_APP_URL) throw new Error("Chybí GAS_WEB_APP_URL");
+    const params=new URLSearchParams();
+    Object.entries(payload).forEach(([k,v])=>params.append(k,v==null?"":String(v)));
+    const body=params.toString();
+
+    if(urgent && navigator.sendBeacon){
+      const blob=new Blob([body],{type:'application/x-www-form-urlencoded;charset=UTF-8'});
+      navigator.sendBeacon(GAS_WEB_APP_URL,blob);
+    }else{
+      fetch(GAS_WEB_APP_URL,{
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body,
+        keepalive:true
+      }).catch(()=>{
+        localStorage.setItem('skolniRad_pendingResult',JSON.stringify(payload));
+      });
+    }
+  }catch(e){
+    localStorage.setItem('skolniRad_pendingResult',JSON.stringify(payload));
+  }
+}
+function tone(freq,dur,gain=.08,type='sine',delay=0){try{unlockAudio();if(!audioCtx)return;let t=audioCtx.currentTime+delay;let o=audioCtx.createOscillator();let g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur+0.03);}catch(e){}}
+function soundCorrect(){tone(720,.08,.06,'sine');tone(980,.10,.05,'sine',.07)}
+function soundWrong(){tone(150,.20,.22,'square');tone(110,.23,.20,'sawtooth',.17);tone(80,.22,.18,'square',.34)}
+function soundCheat(){tone(95,.65,.28,'sawtooth');tone(70,.65,.24,'square',.35);tone(95,.65,.28,'sawtooth',.72)}
+function confetti(){let box=document.getElementById('confetti');for(let i=0;i<90;i++){let p=document.createElement('div');p.className='piece';p.style.left=Math.random()*100+'vw';p.style.top='-20px';p.style.animationDelay=Math.random()*0.8+'s';p.style.background=['#ffd36a','#ff6b6b','#74f0a0','#9fd4ff'][i%4];box.appendChild(p);setTimeout(()=>p.remove(),2700)}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cheatFinish('přepnutí mimo stránku');});
+window.addEventListener('pagehide',()=>{cheatFinish('opuštění stránky');});
+window.addEventListener('beforeunload',()=>{if(activeProtected())cheatFinish('opuštění stránky');});
+window.addEventListener('blur',()=>{setTimeout(()=>{if(activeProtected() && document.visibilityState==='visible' && !document.hasFocus()) cheatFinish('ztráta aktivního okna');},650);});
+const actions={home,nameTest:()=>nameScreen()};
+home();
+</script>
+</body>
+</html>
